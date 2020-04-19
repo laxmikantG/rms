@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %} Tables {% endblock %}
+{% block css %}
+<style>
+{% comment %} 
+.d-table {
+  min-width: 300px;
+  min-height: 300px;
+  background: lightgrey;
+  display: block;
+  width: 1px solid red;
+} {% endcomment %}
+
+.d-table ul {
+  list-style-type: none;
+}
+{% comment %} 
+ {% endcomment %}
+.d-column li {
+  {% comment %} padding: 100px; {% endcomment %}
+  display: inline-block;
+  border: 1px solid blue;
+  {% comment %} background: grey; {% endcomment %}
+  width: 150px;
+  height: 20px;
+  text-align:center;
+}
+
+.d-row li {
+  padding: 10px;
+  display: inline-block;
+  background: #f2f229;
+  border: 1px solid red;
+  width: 300px;
+  height: 200px;
+}
+.right{float:right;}
+.right{text-align:center;}
+</style>
+{% endblock %}
+{% block content %}
+<h3> Tables|{{tables|length}}</h3>
+     {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %} 
+ <div class="d-table">
+    <ul class="d-column">
+     <li>Table Name|Capacity </li>    
+     <li title="Add Table"><a href="{% url 'add_table' %}">+Add Table</a></li>    
+    </ul>
+    {% for table in tables %}
+    <ul class="d-row">
+      <li> {{table.name}}|   
+            <span class="center"><a href="{% url 'modify_table' table_id=table.id %}"> {{table.capacity}} </a></span>&nbsp;
+            <span class="right"><a href="{% url 'remove_table' table_id=table.id %}"> X </a></span></li>
+    </ul>
+    {% endfor %}
+    
+  </div>
+{% endblock content %}

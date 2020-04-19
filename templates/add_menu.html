@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block css %}
+<style>
+body {
+  font-family: Arial;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button.submit {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+div.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <form method="POST" action="{% url 'add_menu' %}">
+  <h3>Add Menu</h3>
+  <a href={% url 'home' %}>Home</a>
+    {% csrf_token %}
+        {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div clas="form">
+    <span class="label"> Menu Name: </span>
+    <input type="text" value="" name="menu_name">
+    <span class="label"> Menu Type </span>
+    <select name="menu_type">
+    {% for menu_type in menu_types %}
+        <option value="{{menu_type.id}}">{{menu_type.type_name}}{{menu_type.category}}</option>
+    {% endfor %}
+    </select>
+    <span class="label"> Price: </span>
+    <input type="number" value="" name="price">
+    <span class="label"> Quantity in Servings: </span>
+    <input type="text" value="" name="quantity">
+    <span class="label"> Taste: </span>
+    <input type="taste" value="" name="taste">
+    <span class="label"> Description: </span>
+    <textarea name="description"></textarea>
+
+    <button type"submit" class='submit'> Submit</button>
+  </form>
+  </div>
+  </div>
+{% endblock content %}

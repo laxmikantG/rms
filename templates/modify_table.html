@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <form method="POST" action="{% url 'modify_table'  table_id=table.id %}">
+  <h3>Update Table</h3>
+  <a href={% url 'home' %}>Tables</a>
+    {% csrf_token %}
+        {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div clas="form">
+    <span class="label"> Table Name: </span>
+    <input type="text" value="{{table.name}}" name="name">
+    <span class="label"> Table Capacity </span>
+    <input type="number" value="{{table.capacity}}" name="capacity">
+    <button type"submit"> Submit</button>
+  </form>
+  </div>
+  </div>
+{% endblock content %}
