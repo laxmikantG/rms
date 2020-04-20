@@ -2,7 +2,9 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.urls import reverse
 
-from core.models import Table, Menu, MenuDetail, Orders, OrderedMenu
+from core.models import Table, Menu, MenuDetail, OrderedMenu
+from core.models import Order as Orders
+import datetime
 # Create your views here.
 
 
@@ -20,7 +22,7 @@ def home(request):
     tables = Table.objects.all()
     menu = Menu.objects.all()
     orders = Orders.objects.all()
-    return render(request, "home1.html", {"tables": tables, "menu":menu, "orders": orders})
+    return render(request, "home.html", {"tables": tables, "menu":menu, "orders": orders})
 
 
 def add_table(request):
@@ -138,17 +140,25 @@ def get_order(request):
     try:
       reqdict = to_reqdict(request)
       table_id = reqdict.get('table_id')
-      menu_ids = reqdict.get('menu_ids'), 
+      menu_ids = reqdict.get('menu_id')
+      quantity = reqdict.get('quantity') 
+      taste = reqdict.get('quantity') 
       staff_id=None
       table = Table.objects.get(id=table_id)
-      items = OrderedMenu.objects.filter(id__in=menu_ids)
+      item = OrderedMenu(menu_id=menu_ids)
+      item.quantity = quantity
+      item.taste = taste
+      item.save()
       order = Orders()
       order.table = table 
-      order.menu.add(items)
+      order.name = f"{order.table.name.lower()}_{datetime.datetime.now().isoformat()}"
       order.save()
+      order.menu.add(item)
       messages.success(request, f'Order has been placed for {table.name}')
     except Exception as e:
       messages.error(request, 'Failed to add Menu')
+      import traceback 
+      e = traceback.format_exc()
       print(e)
   return redirect(reverse('home'))
 

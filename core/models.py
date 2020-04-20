@@ -64,6 +64,7 @@ class Menu (models.Model):
 class OrderedMenu (models.Model):
     menu = models.ForeignKey(Menu, verbose_name=_("Menu"), on_delete=models.CASCADE)
     quantity = models.IntegerField(_("quantity"))
+    taste = models.TextField(_("taste"), default="Regular")
     created = models.DateTimeField(_("created"), auto_now_add=True)
     modified = models.DateTimeField(_("modified"), auto_now=True)
 
@@ -77,14 +78,34 @@ class OrderedMenu (models.Model):
     def get_absolute_url(self):
         return reverse("_detail", kwargs={"pk": self.pk})
 
-class Orders(models.Model):
-    name = models.TextField(_("Orders"))
+class Order(models.Model):
+    name = models.TextField(_("Order"))
     menu = models.ManyToManyField(OrderedMenu, verbose_name=_("Ordered Menu"))
     table = models.ForeignKey(Table, verbose_name=_("Table"), on_delete=models.CASCADE)
     
     class Meta:
         verbose_name = _("Orders")
         verbose_name_plural = _("Orders")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("_detail", kwargs={"pk": self.pk})
+
+
+    def get_absolute_url(self):
+        return reverse("_detail", kwargs={"pk": self.pk})
+
+class Billing(models.Model):
+    order = models.ForeignKey(Order, verbose_name=_("Order"), on_delete=models.CASCADE)    
+    final_total = models.DecimalField(_("Total"), max_digits=7, decimal_places=2)
+    paid = models.BooleanField(_("Paid"))
+    discount = models.DecimalField(_("discount"), max_digits=5, decimal_places=2, default=0.0)
+
+    class Meta:
+        verbose_name = _("Billing")
+        verbose_name_plural = _("Billings")
 
     def __str__(self):
         return self.name

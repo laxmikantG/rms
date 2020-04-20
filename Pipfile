@@ -6,8 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-django = "*"
-pillow = "*"
+flask = "*"
+flask-desktop = "*"
 
 [requires]
 python_version = "3.8"
